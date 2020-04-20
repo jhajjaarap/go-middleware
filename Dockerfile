@@ -6,10 +6,10 @@ RUN chmod +x /usr/bin/fwatchdog
 
 ENV CGO_ENABLED=0
 
-RUN mkdir -p /go/src/handler/function
+RUN mkdir -p /go/src/handler
 WORKDIR /go/src/handler
 COPY . .
 
-ARG GOPRIVATE="gitlab.com/ntsft"
-ARG GONOPROXY="gitlab.com/ntsft"
-ARG GONOSUMDB="gitlab.com/ntsft"
+ENV GOPRIVATE="gitlab.com/ntsft/*"
+ENV GONOPROXY="gitlab.com/ntsft"
+ENV GONOSUMDB="gitlab.com/ntsft"

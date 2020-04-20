@@ -1,0 +1,23 @@
+FROM openfaas/of-watchdog:0.7.7 as watchdog
+FROM alpine:3.11
+# Add non root user and certs
+RUN apk --no-cache add ca-certificates \
+    && addgroup -S app && adduser -S -g app app \
+    && mkdir -p /home/app \
+    && chown app /home/app
+
+WORKDIR /home/app
+
+COPY --chown=app /release/handler    .
+
+COPY --from=watchdog --chown=app /fwatchdog .
+RUN chmod +x ./fwatchdog
+
+USER app
+
+ENV fprocess="./handler"
+ENV mode="http"
+ENV upstream_url="http://127.0.0.1:8082"
+
+CMD ["./fwatchdog"]
+
